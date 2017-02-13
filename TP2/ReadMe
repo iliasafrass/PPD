@@ -1,0 +1,10 @@
+
+Binome : Ilias Afrass et Anas Taibi.
+
+
+L'objet du TP est de prosuire des versions parallèles du calcul de l'ensemble de Mandelbrot.
+Une version séquentielle est fournie dans le fichier mandel-seq.c.
+Deux objectifs progressifs à ce TP :
+
+produire une version parallèle
+se soucier de l'équilibre de la charge
