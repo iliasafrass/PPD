@@ -1,3 +1,8 @@
+//#######################################################################
+ Ilias Afrass
+PPD TP2
+M1S2 LILLE1
+//#######################################################################
 
 
 #include <stdio.h>
@@ -154,32 +159,32 @@ main (int argc, char *argv[])
     MPI_Comm_rank (com, &self);
 
     int n_iter,			/* degre de nettete  */
-	x_size, y_size;		/* & dimensions de l'image */
+	  x_size, y_size;		/* & dimensions de l'image */
     double x_min, x_max, y_min, y_max; /* bornes de la representation */
     char *pathname;		/* fichier destination */
-    picture_t pictG, pictL;
+    picture_t rcv_pict, send_pict;
 
     parse_argv(argc, argv,
 	       &n_iter,
 	       &x_min, &x_max, &y_min, &y_max,
 	       &x_size, &y_size, &pathname);
 
-    init_picture (& pictL, x_size, y_size/procs);
+    init_picture (& send_pict, x_size, y_size/procs);
 	if (self == PROC_NULL)
-		init_picture (&pictG, x_size, y_size);
+		init_picture (&rcv_pict, x_size, y_size);
 
 
-    compute (& pictL, n_iter, x_min, x_max, y_min, y_max, self, procs);
+    compute (& send_pict, n_iter, x_min, x_max, y_min, y_max, self, procs);
 
 
 
-  pictL.pixels, x_size*(y_size/procs), MPI_CHAR, pictG.pixels, x_size*(y_size/procs), MPI_CHAR, PROC_NULL, com);
+  MPI_Gather(send_pict.pixels, x_size*(y_size/procs), MPI_CHAR, rcv_pict.pixels, x_size*(y_size/procs), MPI_CHAR, PROC_NULL, com);
 
 	if(self == PROC_NULL)
-		save_picture (&pictG, pathname);
+		save_picture (&rcv_pict, pathname);
 
 	/*sprintf(filename,"%d-%s", self, pathname);
-    save_picture (&pictL, filename);*/
+    save_picture (&send_pict, filename);*/
 
 
     MPI_Finalize ();
